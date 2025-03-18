@@ -1,0 +1,93 @@
+body {
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Press Start 2P', cursive;
+    overflow: hidden;
+}
+
+.crt {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 4px 100%;
+    animation: scanline 8s linear infinite;
+}
+
+.game-over-container {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #ff3c3c;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+#MensajeF {
+    font-size: 4em;
+    margin-bottom: 0.5em;
+    animation: glitch 1s linear infinite;
+}
+
+.bike-message {
+    color: #ff0;
+    font-size: 1.2em;
+    margin-bottom: 2em;
+    text-shadow: 0 0 5px #ff0;
+    animation: pulse 1.5s infinite;
+}
+
+.retro-btn {
+    background: #000;
+    color: #0f0;
+    border: 4px solid #0f0;
+    padding: 1em 2em;
+    font-size: 1.2em;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-shadow: 0 0 5px #0f0;
+}
+
+.retro-btn:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 15px #0f0;
+    transform: scale(1.05);
+}
+
+.retro-btn::before {
+    content: '↻';
+    position: absolute;
+    left: -20px;
+    transition: left 0.3s ease;
+}
+
+.retro-btn:hover::before {
+    left: 10px;
+}
+
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+}
+
+@keyframes glitch {
+    2% { text-shadow: 5px 0 0 #00ff00, -5px 0 0 #ff0000; }
+    4% { text-shadow: none; }
+    96% { text-shadow: none; }
+    98% { text-shadow: 5px 0 0 #00ff00, -5px 0 0 #ff0000; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}

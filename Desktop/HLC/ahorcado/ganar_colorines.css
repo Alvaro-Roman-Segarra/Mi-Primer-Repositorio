@@ -1,0 +1,64 @@
+body {
+    background-color: #ffcc99;
+    animation: backgroundFade 5s ease-in-out infinite;
+    margin: 0;
+    padding: 0;
+}
+#Titulo {
+    font-size: 100px;
+    color: #800080;
+    margin: 250px;
+    text-align: center;
+    text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.7);
+    animation: victoryText 3s ease-in-out infinite;
+}
+button {
+    background-color: #ffeb99;
+    color: #800080;
+    border: 2px solid #fff;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: bounceIn 1s ease;
+}
+button:hover {
+    background-color: #fff;
+    color: #800080;
+    transform: scale(1.1);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+@keyframes backgroundFade {
+    0% {
+        background-color: #ffcc99;
+    }
+    50% {
+        background-color: #f8d7b3;
+    }
+    100% {
+        background-color: #ffcc99;
+    }
+}
+@keyframes victoryText {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.9);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

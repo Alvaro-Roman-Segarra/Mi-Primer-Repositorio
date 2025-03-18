@@ -1,0 +1,4 @@
+[wsl2]
+memory=8388608000
+swap=2147483648
+debugConsole=true

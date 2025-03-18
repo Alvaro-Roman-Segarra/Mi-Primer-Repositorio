@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Controls</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
+    <style>
+        body {
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+        }
+
+        .crt {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 4px 100%;
+            animation: scanline 8s linear infinite;
+        }
+
+        .controls-container {
+            position: relative;
+            z-index: 1;
+            color: #0f0;
+            text-align: center;
+            padding: 2rem;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        h1 {
+            color: #ff3c3c;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        .controls-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .controls-list li {
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .key {
+            border: 3px solid #0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: #000;
+            color: #0f0;
+            transition: all 0.3s ease;
+        }
+
+        .retro-btn {
+            background: #000;
+            color: #0f0;
+            border: 4px solid #0f0;
+            padding: 1em 2em;
+            margin-top: 3rem;
+            font-size: 1rem;
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .retro-btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 15px #0f0;
+            transform: scale(1.05);
+        }
+
+        .retro-btn::before {
+            content: '←';
+            position: absolute;
+            left: -20px;
+            transition: left 0.3s ease;
+        }
+
+        .retro-btn:hover::before {
+            left: 10px;
+        }
+
+        @keyframes scanline {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00ff, 0 0 40px #ff00ff; }
+        }
+    </style>
+</head>
+<body>
+    <div class="crt">
+        <div class="controls-container">
+            <h1>CONTROLES</h1>
+            <ul class="controls-list">
+                <li>
+                    <span>Mover a la derecha:</span>
+                    <div class="key">→</div>
+                </li>
+                <li>
+                    <span>Mover a la izquierda:</span>
+                    <div class="key">←</div>
+                </li>
+                <li>
+                    <span>Disparar:</span>
+                    <div class="key">↑</div>
+                </li>
+            </ul>
+            <a href="Menú.html">
+                <button class="retro-btn">ATRÁS</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

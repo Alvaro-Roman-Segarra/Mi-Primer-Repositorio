@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phaser Bike Shooting</title>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+  <style type="text/css">
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<audio src="Bicicleta_Song.mp3" autoplay></audio>
+<script type="text/javascript">
+let config = {
+  type: Phaser.AUTO,
+  width: window.innerWidth,
+  height: window.innerHeight,
+  physics: {
+    default: 'arcade',
+    arcade: { debug: true }
+  },
+  scene: { preload: preload, create: create, update: update }
+};
+
+let game = new Phaser.Game(config);
+
+let bicicleta, cursors, bicicletaIzquierda, bicicletaDerecha, ruedas;
+let disparosRestantes = 3, recargando = false, teclaArribaLiberada = true;
+
+// La bici comienza con 10 vidas
+let bikeLives = 10;
+let lifeSlots = [];   // Array que almacenará las imágenes de las vidas
+let gameOver = false; // True detiene el spawn y el movimiento
+
+let pelotaArray = [];    // azul
+let pelota2Array = [];   // morada
+let pelota3Array = [];   // negra
+let pelota4Array = [];   // marrón
+
+// Contadores de apariciones (para limitar spawns iniciales)
+let totalSpawned = 0;
+let countPelota1 = 0;  // azul
+let countPelota2 = 0;  // morada
+let countPelota3 = 0;  // negra
+let countPelota4 = 0;  // marrón
+
+let activeBalls = 0;
+let ballsDestroyed = 0;
+
+let velocidadPelota = { x: 300, y: 350 };
+
+// Mmostrar la cantidad de ruedas en pantalla
+let wheelDisplay = [];
+
+let moneyCollected = 0;
+let moneyText;
+
+function preload() {
+  // Carga de imágenes
+  this.load.image('fondo', 'fondo.jpg');
+  this.load.image('bicicleta_derecha', 'bicicleta.png');
+  this.load.image('bicicleta_izquierda', 'bicicleta_izquierda.png');
+  this.load.image('rueda', 'rueda.png');
+  // Pelotas
+  this.load.image('pelota', 'Pelota Normal.png');  
+  this.load.image('pelota2', 'pelota2.png');      
+  this.load.image('pelota3', 'pelota3.png');          
+  this.load.image('pelota4', 'pelota4.png');          
+  // Imágenes para las vidas
+  this.load.image('vidas', 'vidas.png');            
+  this.load.image('media_vida', 'media_vida.png');    
+  this.load.image('vacio', 'vacio.png');              
+}
+
+function create() {
+  // Mundo y fondo
+  this.physics.world.setBounds(1, 1, window.innerWidth, window.innerHeight);
+  this.add.image(window.innerWidth/2, window.innerHeight/2, 'fondo')
+      .setDisplaySize(window.innerWidth, window.innerHeight);
+
+  // Configurar la bicicleta
+  let posX = window.innerWidth/2;
+  let posY = window.innerHeight - 180;
+  bicicletaDerecha = this.physics.add.sprite(posX, posY, 'bicicleta_derecha').setScale(0.15);
+  bicicletaIzquierda = this.physics.add.sprite(posX, posY, 'bicicleta_izquierda').setScale(0.15).setVisible(false);
+  ruedas = this.physics.add.group();
+  cursors = this.input.keyboard.createCursorKeys();
+
+  // Mostrar las 10 vidas
+  for (let i = 0; i < 10; i++) {
+      let lifeSprite = this.add.image(10 + i * 40, 10, 'vidas').setOrigin(0, 0);
+      lifeSprite.setScale(0.1);
+      lifeSlots.push(lifeSprite);
+  }
+  
+  // Mostrar el marcador de dinero bajo los corazones
+  moneyText = this.add.text(10, 60, "€" + moneyCollected, { font: "24px Arial", fill: "#fff" });
+  
+  // Se muestran 3 ruedas en línea
+  for (let i = 0; i < 3; i++) {
+      // Ajustar la posición
+      let wheelIcon = this.add.image(window.innerWidth - (i * 50) - 20, 10, 'rueda')
+                          .setScale(0.075)
+                          .setOrigin(1, 0);
+      wheelDisplay.push(wheelIcon);
+  }
+
+  // Programar 10 spawns iniciales de pelotas
+  let initialDelay = 3000;
+  let spawnInterval = 4500;
+  for (let i = 0; i < 10; i++) {
+    this.time.delayedCall(initialDelay + i * spawnInterval, () => {
+      spawnRandomBall.call(this);
+    });
+  }
+}
+
+function update() {
+
+  let limitePelota = window.innerHeight - 160;
+  // Actualizar posición de cada pelota según su array
+  pelotaArray.forEach(ball => {
+    if (ball.active && ball.y > limitePelota) {
+      ball.setVelocityY(-Math.abs(velocidadPelota.y));
+      ball.y = limitePelota;
+    }
+  });
+  pelota2Array.forEach(ball => {
+    if (ball.active && ball.y > limitePelota) {
+      ball.setVelocityY(-Math.abs(velocidadPelota.y));
+      ball.y = limitePelota;
+    }
+  });
+  pelota3Array.forEach(ball => {
+    if (ball.active && ball.y > limitePelota) {
+      ball.setVelocityY(-Math.abs(velocidadPelota.y));
+      ball.y = limitePelota;
+    }
+  });
+  pelota4Array.forEach(ball => {
+    if (ball.active && ball.y > limitePelota) {
+      ball.setVelocityY(-Math.abs(velocidadPelota.y));
+      ball.y = limitePelota;
+    }
+  });
+
+  // Movimiento de la bicicleta y límites horizontales
+  if (cursors.left.isDown && bicicletaDerecha.x > 100) {
+    moverBicicleta(-500, false);
+  } else if (cursors.right.isDown && bicicletaDerecha.x < window.innerWidth - 100) {
+    moverBicicleta(500, true);
+  } else {
+    bicicletaDerecha.setVelocityX(0);
+    bicicletaIzquierda.setVelocityX(0);
+  }
+
+  if (cursors.up.isUp) teclaArribaLiberada = true;
+  if (cursors.up.isDown && teclaArribaLiberada) {
+    teclaArribaLiberada = false;
+    dispararRueda();
+  }
+}
+
+function moverBicicleta(velocidad, derecha) {
+  bicicletaDerecha.setVelocityX(velocidad);
+  bicicletaIzquierda.setVelocityX(velocidad);
+  bicicletaDerecha.setVisible(derecha);
+  bicicletaIzquierda.setVisible(!derecha);
+}
+
+function dispararRueda() {
+  if (disparosRestantes > 0 && !recargando) {
+    let rueda = ruedas.create(bicicletaDerecha.x, bicicletaDerecha.y, 'rueda');
+    rueda.setVelocityY(-750);
+    rueda.setScale(0.15);
+    disparosRestantes--;
+    updateWheelDisplay();
+    if (disparosRestantes === 0) {
+      recargando = true;
+      setTimeout(() => {
+        disparosRestantes = 3;
+        recargando = false;
+        updateWheelDisplay();
+      }, 1000);
+    }
+  }
+}
+
+function updateWheelDisplay() {
+  // Muestra los iconos según la cantidad de ruedas disponibles
+  for (let i = 0; i < wheelDisplay.length; i++) {
+    if (i < disparosRestantes) {
+      wheelDisplay[i].setVisible(true);
+    } else {
+      wheelDisplay[i].setVisible(false);
+    }
+  }
+}
+
+// Función para generar una pelota aleatoria
+function spawnRandomBall() {
+  if (gameOver) return;
+  if (totalSpawned >= 10) return; // Sólo se generan 10 spawns iniciales
+
+  let ballType, valid = false;
+  while (!valid) {
+    ballType = Phaser.Math.Between(1, 4);
+    if (ballType === 1 && countPelota1 < 10) { valid = true; }
+    else if (ballType === 2) { valid = true; }
+    else if (ballType === 3 && countPelota3 < 3) { valid = true; }
+    else if (ballType === 4 && countPelota4 < 1) { valid = true; }
+  }
+  
+  let randomX = Phaser.Math.Between(100, window.innerWidth - 100);
+  
+  if (ballType === 1) {
+    // Pelota azul
+    let ball = this.physics.add.sprite(randomX, 50, 'pelota')
+             .setScale(0.375)
+             .setCollideWorldBounds(true)
+             .setBounce(0.8);
+    ball.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    ball.hits = 0;
+    ball.maxHits = 5;
+    this.physics.add.overlap(ball, ruedas, golpearPelota, null, this);
+    this.physics.add.overlap(bicicletaDerecha, ball, bikeHitByBall, null, this);
+    pelotaArray.push(ball);
+    countPelota1++;
+  } else if (ballType === 2) {
+    // Pelota morada
+    let ball = this.physics.add.sprite(randomX, 50, 'pelota2')
+             .setScale(0.1875)
+             .setCollideWorldBounds(true)
+             .setBounce(0.8);
+    ball.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    ball.hits = 0;
+    ball.maxHits = 1;
+    this.physics.add.overlap(ball, ruedas, golpearPelota2, null, this);
+    this.physics.add.overlap(bicicletaDerecha, ball, bikeHitByBall, null, this);
+    ball.bikeHits = 0;
+    pelota2Array.push(ball);
+    countPelota2++;
+  } else if (ballType === 3) {
+    // Pelota negra
+    let ball = this.physics.add.sprite(randomX, 50, 'pelota3')
+             .setScale(0.425)
+             .setCollideWorldBounds(true)
+             .setBounce(0.8);
+    ball.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    ball.hits = 0;
+    ball.maxHits = 10;
+    this.physics.add.overlap(ball, ruedas, golpearPelota3, null, this);
+    this.physics.add.overlap(bicicletaDerecha, ball, bikeHitByBall, null, this);
+    pelota3Array.push(ball);
+    countPelota3++;
+  } else {
+    // Pelota marrón
+    let ball = this.physics.add.sprite(randomX, 50, 'pelota4')
+             .setScale(0.75)
+             .setCollideWorldBounds(true)
+             .setBounce(0.8);
+    ball.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    ball.hits = 0;
+    ball.maxHits = 25;
+    this.physics.add.overlap(ball, ruedas, golpearPelota4, null, this);
+    this.physics.add.overlap(bicicletaDerecha, ball, bikeHitByBall, null, this);
+    pelota4Array.push(ball);
+    countPelota4++;
+  }
+  totalSpawned++;
+  activeBalls++;  
+}
+
+// Victoria
+function checkWinCondition() {
+  if (ballsDestroyed === 10 && !gameOver) {
+    window.location.href = 'ganado.html';
+  }
+}
+
+// Según la cantidad de golpes recibidos, reaparece con el número de golpes restantes
+function bikeHitByBall(bike, ball) {
+  if (gameOver) return;
+  
+  // Según el tipo de pelota, se suma 1 golpe y se resta vida
+  if (ball.texture.key === 'pelota') {
+    ball.hits++;
+    bikeLives -= 0.5;
+  } else if (ball.texture.key === 'pelota2') {
+    ball.bikeHits++;
+    if (ball.bikeHits >= 2) {
+      ball.hits++;
+      bikeLives -= 0.5;
+      ball.bikeHits = 0;
+    }
+  } else if (ball.texture.key === 'pelota3') {
+    ball.hits++;
+    bikeLives -= 1;
+  } else if (ball.texture.key === 'pelota4') {
+    ball.hits++;
+    bikeLives -= 1.5;
+  }
+  if (bikeLives < 0) bikeLives = 0;
+  updateLivesDisplay();
+  let remainingHits = ball.maxHits - ball.hits;
+  if (remainingHits > 0) {
+    // La pelota reaparece como una nueva
+    respawnBall.call(this, ball, remainingHits);
+  } else {
+    // La pelota se destruye definitivamente y se suman 1000 euros
+    ball.destroy();
+    activeBalls--;
+    ballsDestroyed++;
+    moneyCollected += 1000;
+    updateMoneyDisplay();
+    checkWinCondition();
+  }
+  if (bikeLives === 0) {
+    gameOver = true;
+    window.location.href = 'perdido.html';
+  }
+}
+
+// Función para reaparecer la pelota con nuevos golpes máximos
+function respawnBall(oldBall, newMaxHits) {
+  let ballType = oldBall.texture.key;
+  oldBall.destroy();
+  // No se modifica activeBalls, ya que se reemplaza la misma pelota
+  let randomX = Phaser.Math.Between(100, window.innerWidth - 100);
+  let newBall;
+  if (ballType === 'pelota') {
+    newBall = this.physics.add.sprite(randomX, 50, 'pelota')
+          .setScale(0.375)
+          .setCollideWorldBounds(true)
+          .setBounce(0.8);
+    newBall.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    newBall.hits = 0;
+    newBall.maxHits = newMaxHits;
+    this.physics.add.overlap(newBall, ruedas, golpearPelota, null, this);
+    this.physics.add.overlap(bicicletaDerecha, newBall, bikeHitByBall, null, this);
+    pelotaArray.push(newBall);
+  } else if (ballType === 'pelota2') {
+    newBall = this.physics.add.sprite(randomX, 50, 'pelota2')
+          .setScale(0.1875)
+          .setCollideWorldBounds(true)
+          .setBounce(0.8);
+    newBall.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    newBall.hits = 0;
+    newBall.maxHits = newMaxHits;
+    newBall.bikeHits = 0;
+    this.physics.add.overlap(newBall, ruedas, golpearPelota2, null, this);
+    this.physics.add.overlap(bicicletaDerecha, newBall, bikeHitByBall, null, this);
+    pelota2Array.push(newBall);
+  } else if (ballType === 'pelota3') {
+    newBall = this.physics.add.sprite(randomX, 50, 'pelota3')
+          .setScale(0.425)
+          .setCollideWorldBounds(true)
+          .setBounce(0.8);
+    newBall.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    newBall.hits = 0;
+    newBall.maxHits = newMaxHits;
+    this.physics.add.overlap(newBall, ruedas, golpearPelota3, null, this);
+    this.physics.add.overlap(bicicletaDerecha, newBall, bikeHitByBall, null, this);
+    pelota3Array.push(newBall);
+  } else if (ballType === 'pelota4') {
+    newBall = this.physics.add.sprite(randomX, 50, 'pelota4')
+          .setScale(0.75)
+          .setCollideWorldBounds(true)
+          .setBounce(0.8);
+    newBall.setVelocity(velocidadPelota.x, velocidadPelota.y);
+    newBall.hits = 0;
+    newBall.maxHits = newMaxHits;
+    this.physics.add.overlap(newBall, ruedas, golpearPelota4, null, this);
+    this.physics.add.overlap(bicicletaDerecha, newBall, bikeHitByBall, null, this);
+    pelota4Array.push(newBall);
+  }
+}
+
+function golpearPelota(ball, rueda) {
+  rueda.destroy();
+  ball.hits++;
+  if (ball.hits < ball.maxHits) {
+    ball.setScale(ball.scaleX * 0.8);
+    ball.setVelocity(velocidadPelota.x, velocidadPelota.y);
+  } else {
+    ball.destroy();
+    activeBalls--;
+    ballsDestroyed++;
+    moneyCollected += 1000;
+    updateMoneyDisplay();
+    checkWinCondition();
+  }
+}
+
+function golpearPelota2(ball, rueda) {
+  rueda.destroy();
+  ball.destroy();
+  activeBalls--;
+  ballsDestroyed++;
+  moneyCollected += 1000;
+  updateMoneyDisplay();
+  checkWinCondition();
+}
+
+function golpearPelota3(ball, rueda) {
+  rueda.destroy();
+  ball.hits++;
+  if (ball.hits < ball.maxHits) {
+    ball.setScale(ball.scaleX * 0.95);
+    ball.setVelocity(velocidadPelota.x, velocidadPelota.y);
+  } else {
+    ball.destroy();
+    activeBalls--;
+    ballsDestroyed++;
+    moneyCollected += 1000;
+    updateMoneyDisplay();
+    checkWinCondition();
+  }
+}
+
+function golpearPelota4(ball, rueda) {
+  rueda.destroy();
+  ball.hits++;
+  if (ball.hits < ball.maxHits) {
+    ball.setScale(ball.scaleX * 0.95);
+    ball.setVelocity(velocidadPelota.x, velocidadPelota.y);
+  } else {
+    ball.destroy();
+    activeBalls--;
+    ballsDestroyed++;
+    moneyCollected += 1000;
+    updateMoneyDisplay();
+    checkWinCondition();
+  }
+}
+
+function updateLivesDisplay() {
+  for (let i = 0; i < 10; i++) {
+    let lifeValue = bikeLives - i;
+    if (lifeValue >= 1) {
+      lifeSlots[i].setTexture('vidas');
+    } else if (lifeValue === 0.5) {
+      lifeSlots[i].setTexture('media_vida');
+    } else {
+      lifeSlots[i].setTexture('vacio');
+    }
+  }
+}
+
+function updateMoneyDisplay() {
+  moneyText.setText("€" + moneyCollected);
+}
+</script>
+</body>
+</html>

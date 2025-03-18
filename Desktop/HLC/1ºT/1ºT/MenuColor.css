@@ -1,0 +1,106 @@
+body {
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Press Start 2P', cursive;
+    overflow: hidden;
+}
+
+.crt {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 4px 100%;
+    animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+}
+
+.menu-container {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.retro-title {
+    color: #ff3c3c;
+    font-size: 2.5em;
+    text-shadow: 4px 4px #0000ff;
+    margin-bottom: 2em;
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff; }
+    to { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00ff, 0 0 40px #ff00ff; }
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+.retro-btn {
+    background: #000;
+    color: #0f0;
+    border: 4px solid #0f0;
+    padding: 1em 2em;
+    font-size: 1.2em;
+    font-family: 'Press Start 2P', cursive;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-shadow: 0 0 5px #0f0;
+}
+
+.retro-btn:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 15px #0f0;
+    transform: scale(1.05);
+}
+
+.retro-btn::before {
+    content: '>';
+    position: absolute;
+    left: -20px;
+    transition: left 0.3s ease;
+}
+
+.retro-btn:hover::before {
+    left: 10px;
+}
+
+#Créditos {
+    color: #ff0;
+    border-color: #ff0;
+    text-shadow: 0 0 5px #ff0;
+}
+
+#Créditos:hover {
+    background: #ff0;
+    color: #000;
+    box-shadow: 0 0 15px #ff0;
+}
+#Controles {
+    color: #00ffff;
+    border-color: #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+}
+
+#Controles:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 15px #00ffff;
+}

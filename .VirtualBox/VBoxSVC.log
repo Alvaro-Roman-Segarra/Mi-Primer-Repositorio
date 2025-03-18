@@ -1,0 +1,61 @@
+00:00:00.003067 main     VirtualBox COM Server 7.1.4 r165100 win.amd64 (Oct 10 2024 18:57:17) release log
+00:00:00.003070 main     Log opened 2025-03-01T20:29:48.969098000Z
+00:00:00.003071 main     Build Type: release
+00:00:00.003077 main     OS Product: Windows 11
+00:00:00.003078 main     OS Release: 10.0.26100
+00:00:00.003079 main     OS Service Pack: 
+00:00:00.033777 main     DMI Product Name: HP Laptop 15s-fq1xxx
+00:00:00.046581 main     DMI Product Version:  
+00:00:00.046588 main     Firmware type: UEFI
+00:00:00.047078 main     Secure Boot: Enabled
+00:00:00.047103 main     Host RAM: 7879MB (7.6GB) total, 2696MB (2.6GB) available
+00:00:00.047108 main     Executable: C:\Program Files\Oracle\VirtualBox\VBoxSVC.exe
+00:00:00.047109 main     Process ID: 7464
+00:00:00.047109 main     Package type: WINDOWS_64BITS_GENERIC
+00:00:00.047112 main     Windows Features:
+00:00:00.047112 main       Core Isolation (Memory Integrity): ENABLED
+00:00:00.137497          VirtualBox: object creation starts
+00:00:00.137756          Home directory: 'C:\Users\alvar\.VirtualBox'
+00:00:00.137946          Installed Drivers:
+00:00:00.162055          Loading settings file "C:\Users\alvar\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:00.165478          usbLibGetDevices: Starting USB device enumeration
+00:00:00.166894          Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&2b9a4d7&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 3
+00:00:00.167019          Getting USB descriptor (id 0) failed (dwErr=31) on hub USB#ROOT_HUB30#4&2b9a4d7&0&0#{f18a0e88-c30c-11d0-8815-00a0c906bed8} port 10
+00:00:00.169503          usbLibGetDevices: Found 3 USB devices, 0 captured
+00:00:00.169574          USB: Unknown USB device detected (idVendor: 0x0408, idProduct: 0x5365)
+00:00:00.169640          USB: Unknown USB device detected (idVendor: 0x0bda, idProduct: 0xb00c)
+00:00:00.169656          USB: Unknown USB device detected (idVendor: 0x1ea7, idProduct: 0x0064)
+00:00:00.291931          netIfIsWireless: CreateFile on '\\.\{F133BDA3-5B5F-4E39-97FC-73F7A2457E22}' failed with rcWin=2 (0x2) - ignoring
+00:00:00.300926          HostDnsMonitor: initializing
+00:00:00.314910          HostDnsMonitor: updating information
+00:00:00.314939          HostDnsMonitor: old information
+00:00:00.314940            no server entries
+00:00:00.314941            no domain set
+00:00:00.314941            no search string entries
+00:00:00.314941          HostDnsMonitor: new information
+00:00:00.314942            server 1: 192.168.1.1
+00:00:00.314943            domain: TL-WA850RE
+00:00:00.314943            no search string entries
+00:00:00.318871          VD: VDInit finished with VINF_SUCCESS
+00:00:00.320577          Platform architecture set to 'x86'
+00:00:00.488068          Loading settings file "C:\Users\alvar\VirtualBox VMs\Random\Random.vbox" with version "1.19-windows"
+00:00:00.488479          Platform architecture set to 'x86'
+00:00:00.488813          Platform architecture set to 'x86'
+00:00:00.710490          Loading settings file "C:\Users\alvar\VirtualBox VMs\Ubuntu-aromseg599\Ubuntu-aromseg599.vbox" with version "1.19-windows"
+00:00:00.710772          Platform architecture set to 'x86'
+00:00:00.711712          VirtualBox: object created
+00:00:00.995841          Saving settings file "C:\Users\alvar\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:00.999977          Finished saving settings file "C:\Users\alvar\.VirtualBox\VirtualBox.xml"
+00:00:01.000329          Saving settings file "C:\Users\alvar\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:01.003714          Finished saving settings file "C:\Users\alvar\.VirtualBox\VirtualBox.xml"
+00:00:01.004152          Saving settings file "C:\Users\alvar\.VirtualBox\VirtualBox.xml" with version "1.12-windows"
+00:00:01.007169          Finished saving settings file "C:\Users\alvar\.VirtualBox\VirtualBox.xml"
+00:00:02.685764          ERROR [COM]: aRC=VBOX_E_OBJECT_NOT_FOUND (0x80bb0001) aIID={5bfd8965-b81b-469f-8649-f717ce97a5d5} aComponent={NvramStoreWrap} aText={The UEFI NVRAM file is not existing for this machine}, preserve=false aResultDetail=0
+00:00:02.873762          ERROR [COM]: aRC=VBOX_E_INVALID_VM_STATE (0x80bb0002) aIID={e36a5081-a82a-40bd-9e4e-42a44d6ce50f} aComponent={MachineWrap} aText={The machine is not mutable, saved or running (state is PoweredOff)}, preserve=false aResultDetail=0
+00:00:09.063614 main     VirtualBox: object deletion starts
+00:00:09.064467 main     ERROR [COM]: aRC=VBOX_E_OBJECT_IN_USE (0x80bb000c) aIID={7d510820-a678-4730-a862-818dcd3fbed0} aComponent={MediumWrap} aText={Medium 'C:\Users\alvar\VirtualBox VMs\Random\Random.vdi' cannot be closed because it is still attached to 1 virtual machines}, preserve=false aResultDetail=0
+00:00:09.068998 main     ERROR [COM]: aRC=VBOX_E_OBJECT_IN_USE (0x80bb000c) aIID={7d510820-a678-4730-a862-818dcd3fbed0} aComponent={MediumWrap} aText={Medium 'C:\Users\alvar\VirtualBox VMs\Ubuntu-aromseg599\Ubuntu-aromseg599.vdi' cannot be closed because it is still attached to 1 virtual machines}, preserve=false aResultDetail=0
+00:00:09.072094 main     HostDnsMonitor: shutting down ...
+00:00:09.072265 main     HostDnsMonitor: shut down
+00:00:09.080049 Watcher  ERROR [COM]: aRC=E_ACCESSDENIED (0x80070005) aIID={d644ad1e-c501-4fc7-9ab6-aa6d763bc540} aComponent={VirtualBoxWrap} aText={The object is not ready}, preserve=false aResultDetail=0
+00:00:09.081599 main     VirtualBox: object deleted
